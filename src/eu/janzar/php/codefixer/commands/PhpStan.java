@@ -32,7 +32,6 @@ import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import eu.janzar.php.codefixer.options.PhpCodefixerOptions;
-import eu.janzar.php.codefixer.options.PhpCodefixerOptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -73,7 +72,7 @@ public final class PhpStan {
     ); // NOI18N
 
     private static final ExecutionDescriptor DEFAULT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
-            .optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
+            //.optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
             .controllable(true)
             .frontWindow(true)
             .frontWindowOnError(true)
@@ -177,7 +176,7 @@ public final class PhpStan {
             sourceDirectory = phpModule.getSourceDirectory();
         }
         PhpExecutable phpcsfixer = new PhpExecutable(phpstanPath)
-                .optionsSubcategory(PhpCodefixerOptionsPanelController.OPTIONS_SUBPATH)
+                //.optionsSubcategory(PhpCodefixerOptionsPanelController.OPTIONS_SUBPATH)
                 .displayName(title);
         if (sourceDirectory != null) {
             phpcsfixer.workDir(FileUtil.toFile(sourceDirectory));

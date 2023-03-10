@@ -32,7 +32,6 @@ import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import eu.janzar.php.codefixer.options.PhpCodefixerOptions;
-import eu.janzar.php.codefixer.options.PhpCodefixerOptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -63,7 +62,7 @@ public final class PhpCodefixer {
             "--colors"); // NOI18N
 
     private static final ExecutionDescriptor DEFAULT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
-            .optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
+            //.optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
             .controllable(true)
             .frontWindow(true)
             .frontWindowOnError(true)
@@ -191,7 +190,7 @@ public final class PhpCodefixer {
             sourceDirectory = phpModule.getSourceDirectory();
         }
         PhpExecutable phpcodefixer = new PhpExecutable(path)
-                .optionsSubcategory(PhpCodefixerOptionsPanelController.OPTIONS_SUBPATH)
+                //.optionsSubcategory(PhpCodefixerOptionsPanelController.OPTIONS_SUBPATH)
                 .displayName(title);
         if (sourceDirectory != null) {
             phpcodefixer.workDir(FileUtil.toFile(sourceDirectory));
