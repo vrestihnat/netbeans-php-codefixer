@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><module codename="eu.janzar.php.codefixer">
-    <module_version install_time="1678404707147" last="true" origin="installer" specification_version="1.0">
-        <file crc="1641782073" name="config/Modules/eu-janzar-php-codefixer.xml"/>
-        <file crc="640805443" name="modules/eu-janzar-php-codefixer.jar"/>
-    </module_version>
-</module>
