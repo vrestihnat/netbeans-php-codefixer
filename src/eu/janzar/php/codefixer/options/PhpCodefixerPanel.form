@@ -16,7 +16,6 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="optionsPanel" alignment="0" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -71,9 +70,7 @@
               <Component id="showOutputWindowCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="runSelfUpdateOnBootCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,8 +106,6 @@
           <ResourceString bundle="org/netbeans/modules/php/phpcsfixer/options/Bundle.properties" key="PhpCsFixerPanel.phpCsFixerNameLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
-    </Component>
-    <Component class="org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel" name="optionsPanel">
     </Component>
     <Component class="javax.swing.JButton" name="downloadButton">
       <Properties>

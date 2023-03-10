@@ -32,6 +32,8 @@ public class PhpCodefixerOptions {
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
     private static final String SHOW_OUTPUT_WINDOW = "show.output.window"; // NOI18N
+    
+    public static final int LATEST_VERSION = 3;
 
     private PhpCodefixerOptions() {
     }
@@ -58,6 +60,15 @@ public class PhpCodefixerOptions {
     public void setPhpCodeFixerPath(String path) {
         getPreferences().put(PHP_CS_FIXER_PATH, path);
     }
+    
+    public boolean showOutputWindow() {
+        return getPreferences().getBoolean(SHOW_OUTPUT_WINDOW, true);
+    }
+
+    public void setShowOutputWindow(boolean show) {
+        getPreferences().putBoolean(SHOW_OUTPUT_WINDOW, show);
+    }
+    
     
     private Preferences getPreferences() {
         return NbPreferences.forModule(PhpCodefixerOptions.class).node(PREFERENCES_PATH);

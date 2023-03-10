@@ -39,37 +39,28 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.InputOutput;
 
-/**
- * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer
- * @author junichi11
- */
 public final class PhpCodefixer {
 
-    // PHP CS Fixer
-    public static final String NAME = "php-cs-fixer"; // NOI18N
+    // PHP Code Fixer
+    public static final String NAME = "phpcbf"; // NOI18N
     public static final String NAME_LONG = NAME + ".phar"; // NOI18N
-    public static final String DOWNLOAD_URL = "https://cs.symfony.com/download/php-cs-fixer-v3.phar"; // NOI18N
-    private final String phpcsfixerPath;
+    public static final String DOWNLOAD_URL = ""; // NOI18N
+    private final String phpcodefixerPath;
+    private final String phpcodesnifferPath;
     private boolean isDryRun;
     private boolean useSilentDescriptor;
-    // commands
-    private static final String FIX_COMMAND = "fix"; // NOI18N
-    private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
-    //parameters
+   //parameters
     private static final String VERSION_PARAM = "--version"; // NOI18N
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
-    public static final String VERBOSE_PARAM = "--verbose"; // NOI18N
-    public static final String DIFF_PARAM = "--diff"; // NOI18N
-    // 1.x
+    public static final String VERBOSE_PARAM = "-vvv"; // NOI18N
+     // 1.x
     public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
     public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
-    // 2.x
-    public static final String RULES_PARAM = "--rules=%s"; // NOI18N
-    public static final String DIFF_FORMAT_UDIFF_PARAM = "--diff-format=udiff"; // NOI18N
+    public static final String RULES_PARAM = "--standard=\"%s\""; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
-            "--ansi", // NOI18N
-            "--no-interaction"); // NOI18N
+            "-nspq", // NOI18N
+            "--colors"); // NOI18N
 
     private static final ExecutionDescriptor DEFAULT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
             .optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
@@ -83,58 +74,67 @@ public final class PhpCodefixer {
             .inputOutput(InputOutput.NULL);
     private static final Logger LOGGER = Logger.getLogger(PhpCodefixer.class.getName());
 
-    private PhpCodefixer(String phpcsfixerPath) {
-        this(phpcsfixerPath, false);
+    
+    private PhpCodefixer(String phpcsfixerPath, String phpcssnifferPath) {
+        this(phpcsfixerPath,phpcssnifferPath, false);
     }
 
-    private PhpCodefixer(String phpcsfixerPath, boolean useSilentDescriptor) {
-        this.phpcsfixerPath = phpcsfixerPath;
+    private PhpCodefixer(String phpcsfixerPath, String phpcssnifferPath, boolean useSilentDescriptor) {
+        this.phpcodefixerPath = phpcsfixerPath;
+        this.phpcodesnifferPath = phpcssnifferPath;
         this.useSilentDescriptor = useSilentDescriptor;
         this.isDryRun = false;
     }
 
     public static PhpCodefixer getDefault() throws InvalidPhpExecutableException {
-        String phpcsfixerPath = PhpCodefixerOptions.getInstance().getPhpCodeFixerPath();
-        return newInstance(phpcsfixerPath);
+        //String phpcodefixerPath = PhpCodefixerOptions.getInstance().getPhpCodeFixerPath();
+        String phpcsfixerPath = "c://_jzaruba//php8.1.16//phpcbf.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
+        String phpcssnifferPath = "c://_jzaruba//php8.1.16//phpcs.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
+        return newInstance(phpcsfixerPath, phpcssnifferPath);
     }
 
-    public static PhpCodefixer newInstance(String scriptPath) throws InvalidPhpExecutableException {
-        return newInstance(scriptPath, false);
+    public static PhpCodefixer newInstance(String scriptPath, String scriptPath2) throws InvalidPhpExecutableException {
+        return newInstance(scriptPath, scriptPath2, false);
     }
 
-    public static PhpCodefixer newInstance(String scriptPath, boolean useSilentDescriptor) throws InvalidPhpExecutableException {
+    public static PhpCodefixer newInstance(String scriptPath, String scriptPath2, boolean useSilentDescriptor) throws InvalidPhpExecutableException {
         String warning = validate(scriptPath);
         if (warning != null) {
             LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
-        return new PhpCodefixer(scriptPath, useSilentDescriptor);
+        
+        warning = validate(scriptPath2);
+        if (warning != null) {
+            LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
+            throw new InvalidPhpExecutableException(warning);
+        }
+        
+        return new PhpCodefixer(scriptPath, scriptPath2,useSilentDescriptor);
     }
 
-    @NbBundle.Messages("PhpCsFixer.script.label=PHP CS Fixer")
+    @NbBundle.Messages("PhpCsFixer.script.label=PHP Code Fixer")
     private static String validate(String phpcsfixerPath) {
         return PhpExecutableValidator.validateCommand(phpcsfixerPath, Bundle.PhpCsFixer_script_label());
     }
 
     @NbBundle.Messages({
-        "# {0} - command name",
-        "PhpCsFixer.run=PHP CS Fixer ({0})"
+        "PhpCodefixer.run=PHP Code Fixer"
     })
     public Future<Integer> fix(PhpModule phpModule, String... params) {
-        return runCommand(phpModule, FIX_COMMAND, Bundle.PhpCsFixer_run(FIX_COMMAND), Arrays.asList(params));
+        
+        
+        return runCommand(phpModule, "", Bundle.PhpCodefixer_run(), Arrays.asList(params));
     }
-
-    public Future<Integer> fixDryRun(PhpModule phpModule, String... params) {
+    
+    @NbBundle.Messages({
+        "PhpCodefixer.runtest=PHP Code Sniffer"
+    })
+    public Future<Integer> testRun(PhpModule phpModule, String... params) {
         isDryRun = true;
-        List<String> allParams = new ArrayList<>(params.length + 1);
-        allParams.addAll(Arrays.asList(params));
-        allParams.add(DRY_RUN_PARAM);
-        return runCommand(phpModule, FIX_COMMAND, Bundle.PhpCsFixer_run(FIX_COMMAND + " " + DRY_RUN_PARAM), allParams);
+        return runCommand(phpModule, "", Bundle.PhpCodefixer_runtest(), Arrays.asList(params));
     }
 
-    public Future<Integer> selfUpdate(PhpModule phpModule) {
-        return runCommand(phpModule, SELF_UPDATE_COMMAND, Bundle.PhpCsFixer_run(SELF_UPDATE_COMMAND));
-    }
 
     /**
      * Get version.
@@ -163,11 +163,11 @@ public final class PhpCodefixer {
     }
 
     private Future<Integer> runCommand(PhpModule phpModule, String command, String title, List<String> params) {
-        PhpExecutable phpcsfixer = getPhpExecutable(phpModule, title);
-        if (phpcsfixer == null) {
+        PhpExecutable phpcodefixer = getPhpExecutable(phpModule, title);
+        if (phpcodefixer == null) {
             return null;
         }
-        return phpcsfixer
+        return phpcodefixer
                 .additionalParameters(mergeParameters(command, DEFAULT_PARAMS, params))
                 .run(getDescriptor(phpModule));
     }
@@ -182,16 +182,21 @@ public final class PhpCodefixer {
 
     private PhpExecutable getPhpExecutable(PhpModule phpModule, String title) {
         FileObject sourceDirectory = null;
+        String path = phpcodefixerPath;
+        if (isDryRun){
+            path = phpcodesnifferPath;
+        }
+        
         if (phpModule != null) {
             sourceDirectory = phpModule.getSourceDirectory();
         }
-        PhpExecutable phpcsfixer = new PhpExecutable(phpcsfixerPath)
+        PhpExecutable phpcodefixer = new PhpExecutable(path)
                 .optionsSubcategory(PhpCodefixerOptionsPanelController.OPTIONS_SUBPATH)
                 .displayName(title);
         if (sourceDirectory != null) {
-            phpcsfixer.workDir(FileUtil.toFile(sourceDirectory));
+            phpcodefixer.workDir(FileUtil.toFile(sourceDirectory));
         }
-        return phpcsfixer;
+        return phpcodefixer;
     }
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {

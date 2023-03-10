@@ -1,4 +1,4 @@
-Manifest-Version: 1.0
+Manifest-Version: 1.0.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: eu.janzar.php.codefixer
 OpenIDE-Module-Install: eu/janzar/php/codefixer/Installer.class

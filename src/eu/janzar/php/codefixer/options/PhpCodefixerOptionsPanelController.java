@@ -39,7 +39,7 @@ public final class PhpCodefixerOptionsPanelController extends OptionsPanelContro
 
     public static final String ID = "PHP-CS-Fixer"; // NOI18N
     public static final String OPTIONS_SUBPATH = "PHPCSFixer"; // NOI18N
-    private PhpCsFixerPanel panel;
+    private PhpCodefixerPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -94,9 +94,9 @@ public final class PhpCodefixerOptionsPanelController extends OptionsPanelContro
         pcs.removePropertyChangeListener(l);
     }
 
-    private PhpCsFixerPanel getPanel() {
+    private PhpCodefixerPanel getPanel() {
         if (panel == null) {
-            panel = new PhpCsFixerPanel(this);
+            panel = new PhpCodefixerPanel(this);
         }
         return panel;
     }

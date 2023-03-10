@@ -40,8 +40,8 @@ import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
-import org.netbeans.modules.php.phpcsfixer.ui.UiUtils;
+import eu.janzar.php.codefixer.commands.PhpCodefixer;
+import eu.janzar.php.codefixer.ui.UiUtils;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileObject;
@@ -49,13 +49,13 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
-final class PhpCsFixerPanel extends javax.swing.JPanel {
+final class PhpCodefixerPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 8727885479187122174L;
     private final PhpCodefixerOptionsPanelController controller;
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
-    private static final RequestProcessor RP = new RequestProcessor(PhpCsFixerPanel.class);
-    private static final Logger LOGGER = Logger.getLogger(PhpCsFixerPanel.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor(PhpCodefixerPanel.class);
+    private static final Logger LOGGER = Logger.getLogger(PhpCodefixerPanel.class.getName());
 
     private int version;
     // 1.x
@@ -78,7 +78,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private boolean isDiff;
     private String custom;
 
-    PhpCsFixerPanel(PhpCodefixerOptionsPanelController controller) {
+    PhpCodefixerPanel(PhpCodefixerOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
         setVersion(""); // NOI18N
@@ -96,50 +96,48 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         pathTextField = new JTextField();
         browseButton = new JButton();
         phpCsFixerNameLabel = new JLabel();
-        optionsPanel = new PhpCodefixerOptionsPanel();
         downloadButton = new JButton();
         showOutputWindowCheckBox = new JCheckBox();
         versionLabel = new JLabel();
         selfUpdateButton = new JButton();
         runSelfUpdateOnBootCheckBox = new JCheckBox();
 
-        Mnemonics.setLocalizedText(pathLabel, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(pathLabel, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
-        pathTextField.setText(NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathTextField.text")); // NOI18N
+        pathTextField.setText(NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.pathTextField.text")); // NOI18N
 
-        Mnemonics.setLocalizedText(browseButton, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.browseButton.text")); // NOI18N
+        Mnemonics.setLocalizedText(browseButton, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.browseButton.text")); // NOI18N
         browseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 browseButtonActionPerformed(evt);
             }
         });
 
-        Mnemonics.setLocalizedText(phpCsFixerNameLabel, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.phpCsFixerNameLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpCsFixerNameLabel, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.phpCsFixerNameLabel.text")); // NOI18N
 
-        Mnemonics.setLocalizedText(downloadButton, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.downloadButton.text")); // NOI18N
+        Mnemonics.setLocalizedText(downloadButton, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.downloadButton.text")); // NOI18N
         downloadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 downloadButtonActionPerformed(evt);
             }
         });
 
-        Mnemonics.setLocalizedText(showOutputWindowCheckBox, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(showOutputWindowCheckBox, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
 
         Mnemonics.setLocalizedText(versionLabel, "VERSION"); // NOI18N
 
-        Mnemonics.setLocalizedText(selfUpdateButton, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.selfUpdateButton.text")); // NOI18N
+        Mnemonics.setLocalizedText(selfUpdateButton, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.selfUpdateButton.text")); // NOI18N
         selfUpdateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 selfUpdateButtonActionPerformed(evt);
             }
         });
 
-        Mnemonics.setLocalizedText(runSelfUpdateOnBootCheckBox, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.runSelfUpdateOnBootCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(runSelfUpdateOnBootCheckBox, NbBundle.getMessage(PhpCodefixerPanel.class, "PhpCsFixerPanel.runSelfUpdateOnBootCheckBox.text")); // NOI18N
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(optionsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -183,15 +181,13 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addComponent(showOutputWindowCheckBox)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(runSelfUpdateOnBootCheckBox)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(optionsPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     @NbBundle.Messages("LBL_SelectPhpCsFixer=Select PHP CS Fixer")
     private void browseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        File phpcsfixer = new FileChooserBuilder(PhpCsFixerPanel.class.getName() + PHPCSFIXER_LAST_FOLDER_SUFFIX)
+        File phpcsfixer = new FileChooserBuilder(PhpCodefixerPanel.class.getName() + PHPCSFIXER_LAST_FOLDER_SUFFIX)
                 .setTitle(Bundle.LBL_SelectPhpCsFixer())
                 .setFilesOnly(true)
                 .setFileFilter(new FileFilterImpl())
@@ -210,7 +206,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     @NbBundle.Messages("LBL_SelectDonwloadFolder=Select download folder")
     private void downloadButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        File downloadDirectory = new FileChooserBuilder(PhpCsFixerPanel.class.getName() + PHPCSFIXER_LAST_FOLDER_SUFFIX)
+        File downloadDirectory = new FileChooserBuilder(PhpCodefixerPanel.class.getName() + PHPCSFIXER_LAST_FOLDER_SUFFIX)
                 .setTitle(Bundle.LBL_SelectDonwloadFolder())
                 .setDirectoriesOnly(true)
                 .showOpenDialog();
@@ -244,7 +240,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 String filePath = file.getCanonicalPath();
                 setPath(filePath);
                 // run self-update because it might be an old version
-                selfUpdate(filePath);
+                //selfUpdate(filePath);
             } catch (MalformedURLException ex) {
                 if (file.exists()) {
                     file.delete();
@@ -259,18 +255,18 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_downloadButtonActionPerformed
 
-    @NbBundle.Messages("PhpCsFixerPanel.selfupdate.warning.message=Please set a file path")
+    @NbBundle.Messages("PhpCodefixerPanel.selfupdate.warning.message=Please set a file path")
     private void selfUpdateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_selfUpdateButtonActionPerformed
         if (StringUtils.isEmpty(getPath())) {
-            UiUtils.showWarningMessage(Bundle.PhpCsFixerPanel_selfupdate_warning_message());
+            UiUtils.showWarningMessage(Bundle.PhpCodefixerPanel_selfupdate_warning_message());
         } else {
-            selfUpdate(getPath());
+            //selfUpdate(getPath());
         }
     }//GEN-LAST:event_selfUpdateButtonActionPerformed
 
     void load() {
         PhpCodefixerOptions options = getOptions();
-        setPath(options.getPhpCsFixerPath());
+      /*  setPath(options.getPhpCsFixerPath());
         setShowOutputWindow(options.showOutputWindow());
 
         // original options
@@ -317,14 +313,14 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
         optionsPanel.setVerbose(isVerbose);
-        optionsPanel.setDiff(isDiff);
+        optionsPanel.setDiff(isDiff);*/
         downloadButton.setEnabled(true);
     }
 
     void store() {
         PhpCodefixerOptions options = getOptions();
         String path = getPath();
-        if (path.endsWith(PhpCodefixer.NAME)
+       /* if (path.endsWith(PhpCodefixer.NAME)
                 || path.endsWith(PhpCodefixer.NAME_LONG)
                 || path.endsWith(PhpCodefixer.NAME + FileUtils.getScriptExtension(true))) {
             options.setPhpCsFixerPath(getPath());
@@ -387,7 +383,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         }
         if (isDiff != optionsPanel.isDiff()) {
             options.setDiff(optionsPanel.isDiff());
-        }
+        }*/
     }
 
     private PhpCodefixerOptions getOptions() {
@@ -432,30 +428,15 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         return runSelfUpdateOnBootCheckBox.isSelected();
     }
 
-    private void selfUpdate(String filePath) {
-        RP.post(() -> {
-            try {
-                Future<Integer> future = PhpCodefixer.newInstance(filePath).selfUpdate(null);
-                Integer get = future.get();
-                reloadVersion(filePath);
-            } catch (InvalidPhpExecutableException ex) {
-                UiUtils.showWarningMessage(ex.getMessage());
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            } catch (ExecutionException ex) {
-                LOGGER.log(WARNING, null, ex);
-            }
-        });
-    }
 
-    @NbBundle.Messages("PhpCsFixerPanel.loading.version=Loading...")
+    @NbBundle.Messages("PhpCodefixerPanel.loading.version=Loading...")
     private void reloadVersion(String path) {
         if (!EventQueue.isDispatchThread()) {
-            SwingUtilities.invokeLater(() -> setVersion(Bundle.PhpCsFixerPanel_loading_version()));
+            SwingUtilities.invokeLater(() -> setVersion(Bundle.PhpCodefixerPanel_loading_version()));
         }
         RP.post(() -> {
             try {
-                String ver = PhpCodefixer.newInstance(path).getVersion();
+                String ver = PhpCodefixer.newInstance(path,"").getVersion();
                 SwingUtilities.invokeLater(() -> setVersion(ver));
             } catch (InvalidPhpExecutableException ex) {
                 SwingUtilities.invokeLater(() -> setVersion("")); // NOI18N
@@ -473,7 +454,6 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton browseButton;
     private JButton downloadButton;
-    private PhpCodefixerOptionsPanel optionsPanel;
     private JLabel pathLabel;
     private JTextField pathTextField;
     private JLabel phpCsFixerNameLabel;
