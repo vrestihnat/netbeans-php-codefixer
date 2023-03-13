@@ -32,6 +32,7 @@ import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import eu.janzar.php.codefixer.options.PhpCodefixerOptions;
+import eu.janzar.php.codefixer.options.PhpQaOptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -72,7 +73,7 @@ public final class PhpStan {
     ); // NOI18N
 
     private static final ExecutionDescriptor DEFAULT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
-            //.optionsPath(PhpCodefixerOptionsPanelController.getOptionsPath())
+            .optionsPath(PhpQaOptionsPanelController.getOptionsPath())
             .controllable(true)
             .frontWindow(true)
             .frontWindowOnError(true)
@@ -186,13 +187,7 @@ public final class PhpStan {
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {
         ExecutionDescriptor descriptor;
-        if (useSilentDescriptor) {
-            descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
-        } else if (PhpCodefixerOptions.getInstance().showOutputWindow() || isDryRun) {
-            descriptor = DEFAULT_EXECUTION_DESCRIPTOR;
-        } else {
-            descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
-        }
+        descriptor = DEFAULT_EXECUTION_DESCRIPTOR;
         descriptor = descriptor.postExecution(() -> {});
         if (phpModule != null) {
             final FileObject sourceDirectory = phpModule.getSourceDirectory();

@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -21,10 +22,17 @@ import org.openide.util.Lookup;
 @org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PhpQa=PHP codefixer - sniffer - stan", "AdvancedOption_Keywords_PhpQa=codefixer, sniffer, stan"})
 public final class PhpQaOptionsPanelController extends OptionsPanelController {
 
+  public static final String ID = "PHP-CODE-Fixer"; // NOI18N
+  public static final String OPTIONS_SUBPATH = "PHPCodeFixer"; // NOI18N
   private PhpQaPanel panel;
   private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
   private boolean changed;
 
+  
+  public static String getOptionsPath() {
+        return UiUtils.FRAMEWORKS_AND_TOOLS_OPTIONS_PATH;
+  }
+  
   public void update() {
     getPanel().load();
     changed = false;
