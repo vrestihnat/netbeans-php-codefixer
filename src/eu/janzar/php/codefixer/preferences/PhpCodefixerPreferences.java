@@ -21,31 +21,23 @@ import java.util.prefs.Preferences;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import eu.janzar.php.codefixer.commands.PhpCodefixer;
-import static eu.janzar.php.codefixer.options.PhpCodefixerOptions.LATEST_VERSION;
+import eu.janzar.php.codefixer.commands.PhpStan;
 
 public final class PhpCodefixerPreferences {
 
     private static final String USE_GLOBAL = "use-global"; // NOI18N
     private static final String USE_PROJECT = "use-project"; // NOI18N
     private static final String RUN_ON_SAVE = "run-on-save"; // NOI18N
-    // php-cs-fixer options
-    private static final String VERSION = "version"; // NOI18N
-    // 1.x
-    private static final String USE_LEVEL = "use-level"; // NOI18N
     private static final String LEVEL = "level"; // NOI18N
-    private static final String USE_CONFIG = "use-config"; // NOI18N
     private static final String CONFIG = "config"; // NOI18N
-    private static final String USE_FIXERS = "use-fixers"; // NOI18N
     private static final String FIXERS = "fixers"; // NOI18N
-    private static final String USE_CUSTOM = "use-custom"; // NOI18N
-    // 2.x
-    private static final String USE_RULES = "use-rules"; // NOI18N
+    private static final String ENCODING = "encoding"; // NOI18N
+    private static final String EXTENSIONS = "extensions"; // NOI18N
+    private static final String AUTOLOAD = "autoload"; // NOI18N
     private static final String RULES = "rules"; // NOI18N
-    private static final String DIFF_FORMAT_UDIFF = "diff-format-udiff"; // NOI18N
-    // common
     private static final String CUSTOM = "custom"; // NOI18N
+    private static final String STANCUSTOM = "stan-custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
-    private static final String DIFF = "diff"; // NOI18N
 
     private PhpCodefixerPreferences() {
     }
@@ -66,41 +58,12 @@ public final class PhpCodefixerPreferences {
         getPreferences(phpModule).putBoolean(USE_PROJECT, use);
     }
 
-    public static int getVersion(PhpModule phpModule) {
-        int version = getPreferences(phpModule).getInt(VERSION, LATEST_VERSION);
-        if (version <= 0 || LATEST_VERSION < version) {
-            version = LATEST_VERSION;
-        }
-        return version;
+    public static int getLevel(PhpModule phpModule) {
+        return getPreferences(phpModule).getInt(LEVEL, 0); // NOI18N
     }
 
-    public static void setVersion(PhpModule phpModule, int version) {
-        getPreferences(phpModule).putInt(VERSION, version);
-    }
-
-    // 1.x
-    public static boolean useLevel(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_LEVEL, false);
-    }
-
-    public static void setLevel(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_LEVEL, use);
-    }
-
-    public static String getLevel(PhpModule phpModule) {
-        return getPreferences(phpModule).get(LEVEL, ""); // NOI18N
-    }
-
-    public static void setLevel(PhpModule phpModule, String level) {
-        getPreferences(phpModule).put(LEVEL, level);
-    }
-
-    public static boolean useConfig(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_CONFIG, false);
-    }
-
-    public static void setConfig(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_CONFIG, use);
+    public static void setLevel(PhpModule phpModule, int level) {
+        getPreferences(phpModule).putInt(LEVEL, level);
     }
 
     public static String getConfig(PhpModule phpModule) {
@@ -111,29 +74,12 @@ public final class PhpCodefixerPreferences {
         getPreferences(phpModule).put(CONFIG, config);
     }
 
-    public static boolean useFixers(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_FIXERS, false);
-    }
-
-    public static void setFixers(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_FIXERS, use);
-    }
-
     public static String getFixers(PhpModule phpModule) {
         return getPreferences(phpModule).get(FIXERS, ""); // NOI18N
     }
 
     public static void setFixers(PhpModule phpModule, String fixers) {
         getPreferences(phpModule).put(FIXERS, fixers);
-    }
-
-    // 2.x
-    public static boolean useRules(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_RULES, false);
-    }
-
-    public static void setRules(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_RULES, use);
     }
 
     public static String getRules(PhpModule phpModule) {
@@ -144,20 +90,19 @@ public final class PhpCodefixerPreferences {
         getPreferences(phpModule).put(RULES, rules);
     }
 
-    public static boolean useCustom(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_CUSTOM, false);
-    }
-
-    public static void setCustom(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_CUSTOM, use);
-    }
-
     public static String getCustom(PhpModule phpModule) {
         return getPreferences(phpModule).get(CUSTOM, ""); // NOI18N
     }
 
     public static void setCustom(PhpModule phpModule, String custom) {
         getPreferences(phpModule).put(CUSTOM, custom);
+    }
+    public static String getStanCustom(PhpModule phpModule) {
+        return getPreferences(phpModule).get(STANCUSTOM, ""); // NOI18N
+    }
+
+    public static void setStanCustom(PhpModule phpModule, String custom) {
+        getPreferences(phpModule).put(STANCUSTOM, custom);
     }
 
     public static boolean isRunOnSave(PhpModule phpModule) {
@@ -176,44 +121,70 @@ public final class PhpCodefixerPreferences {
         getPreferences(phpModule).putBoolean(VERBOSE, isVerbose);
     }
 
-    public static boolean isDiff(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(DIFF, false);
+    public static String getEncoding(PhpModule phpModule) {
+        return getPreferences(phpModule).get(ENCODING, ""); // NOI18N
     }
 
-    public static void setDiff(PhpModule phpModule, boolean isDiff) {
-        getPreferences(phpModule).putBoolean(DIFF, isDiff);
+    public static void setEncoding(PhpModule phpModule, String encoding) {
+        getPreferences(phpModule).put(ENCODING, encoding);
     }
 
-    public static boolean isDiffFormatUdiff(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(DIFF_FORMAT_UDIFF, false);
+    public static String getExtensions(PhpModule phpModule) {
+        return getPreferences(phpModule).get(EXTENSIONS, ""); // NOI18N
     }
 
-    public static void setDiffFormatUdiff(PhpModule phpModule, boolean isDiff) {
-        getPreferences(phpModule).putBoolean(DIFF_FORMAT_UDIFF, isDiff);
+    public static void setExtensions(PhpModule phpModule, String config) {
+        getPreferences(phpModule).put(EXTENSIONS, config);
+    }
+
+    public static String getAutoload(PhpModule phpModule) {
+        return getPreferences(phpModule).get(AUTOLOAD, ""); // NOI18N
+    }
+
+    public static void setAutoload(PhpModule phpModule, String config) {
+        getPreferences(phpModule).put(AUTOLOAD, config);
     }
 
     public static List<String> getAllOptions(PhpModule phpModule) {
         List<String> all = new ArrayList<>();
-        if (getVersion(phpModule) == 2) {
-            if (useRules(phpModule) && !getRules(phpModule).isEmpty()) {
-                all.add(String.format(PhpCodefixer.RULES_PARAM, getRules(phpModule)));
-            }
-        } else {
-            if (useLevel(phpModule) && !getLevel(phpModule).isEmpty()) {
-                all.add(String.format(PhpCodefixer.LEVEL_PARAM, getLevel(phpModule)));
-            }
-            if (useConfig(phpModule) && !getConfig(phpModule).isEmpty()) {
-                all.add(String.format(PhpCodefixer.CONFIG_PARAM, getConfig(phpModule)));
-            }
-            if (useFixers(phpModule) && !getFixers(phpModule).isEmpty()) {
-                all.add(String.format(PhpCodefixer.FIXERS_PARAM, getFixers(phpModule)));
-            }
+        if (!getRules(phpModule).isEmpty()) {
+            all.add(String.format(PhpCodefixer.RULES_PARAM, getRules(phpModule)));
         }
-        if (useCustom(phpModule) && !getCustom(phpModule).isEmpty()) {
+
+        if (!getExtensions(phpModule).isEmpty()) {
+            all.add(String.format(PhpCodefixer.EXTENSIONS_PARAM, getConfig(phpModule)));
+        }
+        
+        if (!getEncoding(phpModule).isEmpty()) {
+            all.add(String.format(PhpCodefixer.ENCODING_PARAM, getConfig(phpModule)));
+        }
+
+        if (!getCustom(phpModule).isEmpty()) {
             all.addAll(StringUtils.explode(getCustom(phpModule), " ")); // NOI18N
         }
         return all;
     }
+    
+    public static List<String> getAllStanOptions(PhpModule phpModule) {
+        List<String> all = new ArrayList<>();
+        if (getLevel(phpModule) != 0) {
+            all.add(String.format(PhpStan.LEVEL_PARAM, getLevel(phpModule)));
+        }
+        
+        if (!getConfig(phpModule).isEmpty()) {
+            all.add(String.format(PhpStan.CONFIG_PARAM, getConfig(phpModule)));
+        }
+        
+        if (!getAutoload(phpModule).isEmpty()) {
+            all.add(String.format(PhpStan.AUTOLOAD_PARAM, getConfig(phpModule)));
+        }
+
+        if (!getStanCustom(phpModule).isEmpty()) {
+            all.addAll(StringUtils.explode(getCustom(phpModule), " ")); // NOI18N
+        }
+        return all;
+    }
+    
 
     private static Preferences getPreferences(PhpModule phpModule) {
         return phpModule.getPreferences(PhpCodefixerPreferences.class, true);

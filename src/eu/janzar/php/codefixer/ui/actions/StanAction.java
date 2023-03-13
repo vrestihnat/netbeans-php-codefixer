@@ -6,8 +6,10 @@ package eu.janzar.php.codefixer.ui.actions;
 
 import eu.janzar.php.codefixer.commands.PhpCodefixer;
 import eu.janzar.php.codefixer.commands.PhpStan;
+import eu.janzar.php.codefixer.options.PhpCodefixerOptions;
 import static eu.janzar.php.codefixer.ui.actions.FixAction.LOGGER;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -37,7 +39,8 @@ import org.openide.util.NbBundle;
     @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1090)
 })
 public class StanAction extends FixAction {
-        @Override
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         if (phpModule == null) {
@@ -46,17 +49,18 @@ public class StanAction extends FixAction {
         try {
             //JOptionPane.showMessageDialog(null, "Test");
             runCommand(phpModule, getOptions());
-            
+
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
     }
+
     @NbBundle.Messages("StanAction.name=Stan")
     @Override
     protected String getName() {
         return Bundle.TestAction_name();
     }
-    
+
     @Override
     public void runCommand(PhpModule phpModule, List<String> options, FileObject targetFile) throws InvalidPhpExecutableException {
         List<String> params = getAllParams(targetFile, options);
@@ -71,5 +75,17 @@ public class StanAction extends FixAction {
             }
         }
     }
-    
+
+    @Override
+    protected List<String> getOptions() {
+        PhpModule phpModule = PhpModule.Factory.inferPhpModule();
+        List<String> options = new ArrayList<>();
+        boolean isDryRun = isDryRun();
+
+        PhpCodefixerOptions instance = PhpCodefixerOptions.getInstance();
+        options.addAll(instance.getAllStanOptions(phpModule));
+
+        return options;
+    }
+
 }

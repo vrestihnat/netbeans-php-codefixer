@@ -19,7 +19,7 @@ import org.openide.util.Lookup;
         keywords = "#AdvancedOption_Keywords_PhpQa",
         keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/PhpQa"
 )
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PhpQa=PHP codefixer - sniffer - stan", "AdvancedOption_Keywords_PhpQa=codefixer, sniffer, stan"})
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PhpQa=PHP codefixer/sniffer/stan", "AdvancedOption_Keywords_PhpQa=codefixer, sniffer, stan"})
 public final class PhpQaOptionsPanelController extends OptionsPanelController {
 
   public static final String ID = "PHP-CODE-Fixer"; // NOI18N

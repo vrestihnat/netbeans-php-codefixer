@@ -50,14 +50,10 @@ public final class PhpCodefixer {
     private boolean isDryRun;
     private boolean useSilentDescriptor;
    //parameters
-    private static final String VERSION_PARAM = "--version"; // NOI18N
-    public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
     public static final String VERBOSE_PARAM = "-vvv"; // NOI18N
-     // 1.x
-    public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
-    public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
-    public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
-    public static final String RULES_PARAM = "--standard=\"%s\""; // NOI18N
+    public static final String EXTENSIONS_PARAM = "--extensions=%s"; // NOI18N
+    public static final String ENCODING_PARAM = "--encoding=%s"; // NOI18N
+    public static final String RULES_PARAM = "--standard=%s"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
             "-nspq", // NOI18N
             "--colors"); // NOI18N
@@ -87,10 +83,11 @@ public final class PhpCodefixer {
     }
 
     public static PhpCodefixer getDefault() throws InvalidPhpExecutableException {
-        //String phpcodefixerPath = PhpCodefixerOptions.getInstance().getPhpCodeFixerPath();
-        String phpcsfixerPath = "c://_jzaruba//php8.1.16//phpcbf.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
-        String phpcssnifferPath = "c://_jzaruba//php8.1.16//phpcs.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
-        return newInstance(phpcsfixerPath, phpcssnifferPath);
+        String phpcodefixerPath = PhpCodefixerOptions.getInstance().getPhpCodeFixerPath();
+        //String phpcodefixerPath = "c://_jzaruba//php8.1.16//phpcbf.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
+        //String phpsnifferPath = "c://_jzaruba//php8.1.16//phpcs.phar --standard=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//ruleset.xml\"  --extensions=\"php,phtml,phpt\" --encoding=utf-8  ";
+        String phpsnifferPath = PhpCodefixerOptions.getInstance().getPhpCodeSnifferPath();
+        return newInstance(phpcodefixerPath, phpsnifferPath);
     }
 
     public static PhpCodefixer newInstance(String scriptPath, String scriptPath2) throws InvalidPhpExecutableException {
@@ -106,7 +103,7 @@ public final class PhpCodefixer {
         
         warning = validate(scriptPath2);
         if (warning != null) {
-            LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
+            LOGGER.log(Level.WARNING, "PHP CS Sniffer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
         
@@ -135,28 +132,6 @@ public final class PhpCodefixer {
         return runCommand(phpModule, "", Bundle.PhpCodefixer_runtest(), Arrays.asList(params));
     }
 
-
-    /**
-     * Get version.
-     *
-     * @return version
-     */
-    public String getVersion() {
-        DefaultLineProcessor lineProcessor = new DefaultLineProcessor();
-        Future<Integer> result = getPhpExecutable(null, "version")
-                .additionalParameters(Arrays.asList(VERSION_PARAM))
-                .run(NO_OUTPUT_EXECUTION_DESCRIPTOR, getOutputProcessorFactory(lineProcessor));
-        try {
-            if (result != null) {
-                result.get();
-            }
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return lineProcessor.getResult();
-    }
 
     private Future<Integer> runCommand(PhpModule phpModule, String command, String title) {
         return runCommand(phpModule, command, title, Collections.<String>emptyList());

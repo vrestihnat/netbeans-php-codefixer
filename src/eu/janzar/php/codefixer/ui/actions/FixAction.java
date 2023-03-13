@@ -162,8 +162,12 @@ public class FixAction extends AbstractAction implements ActionListener {
         List<String> options = new ArrayList<>();
         boolean isDryRun = isDryRun();
         boolean isVerbose;
-        boolean isDiff;
-        boolean isDiffFormatUdiff;
+//        boolean isDiff;
+//        boolean isDiffFormatUdiff;
+        
+        PhpCodefixerOptions instance = PhpCodefixerOptions.getInstance();
+        options.addAll(instance.getAllOptions(phpModule));
+        isVerbose = instance.getVerbose();
 
         /*
         if (phpModule == null || PhpCodefixerPreferences.useGlobal(phpModule)) {

@@ -50,23 +50,14 @@ public final class PhpStan {
     public static final String NAME_LONG = NAME + ".phar"; // NOI18N
     public static final String DOWNLOAD_URL = ""; // NOI18N
     private final String phpstanPath;
-    private boolean isDryRun;
     private boolean useSilentDescriptor;
     // commands
     private static final String FIX_COMMAND = "analyse"; // NOI18N
-    private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     //parameters
-    private static final String VERSION_PARAM = "--version"; // NOI18N
-    public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
     public static final String VERBOSE_PARAM = "--verbose"; // NOI18N
-    public static final String DIFF_PARAM = "--diff"; // NOI18N
-    // 1.x
-    public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
+    public static final String CONFIG_PARAM = "--configuration=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
-    public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
-    // 2.x
-    public static final String RULES_PARAM = "--rules=%s"; // NOI18N
-    public static final String DIFF_FORMAT_UDIFF_PARAM = "--diff-format=udiff"; // NOI18N
+    public static final String AUTOLOAD_PARAM = "--autoload-file=%s"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
     "--no-progress",
     "--no-ansi"
@@ -91,7 +82,6 @@ public final class PhpStan {
     private PhpStan(String phpstanPath, boolean useSilentDescriptor) {
         this.phpstanPath = phpstanPath;
         this.useSilentDescriptor = useSilentDescriptor;
-        this.isDryRun = false;
     }
 
     public static PhpStan getDefault() throws InvalidPhpExecutableException {
@@ -126,28 +116,6 @@ public final class PhpStan {
         return runCommand(phpModule, FIX_COMMAND, Bundle.PhpStan_run(FIX_COMMAND), Arrays.asList(params));
     }
 
-
-    /**
-     * Get version.
-     *
-     * @return version
-     */
-    public String getVersion() {
-        DefaultLineProcessor lineProcessor = new DefaultLineProcessor();
-        Future<Integer> result = getPhpExecutable(null, "version")
-                .additionalParameters(Arrays.asList(VERSION_PARAM))
-                .run(NO_OUTPUT_EXECUTION_DESCRIPTOR, getOutputProcessorFactory(lineProcessor));
-        try {
-            if (result != null) {
-                result.get();
-            }
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return lineProcessor.getResult();
-    }
 
     private Future<Integer> runCommand(PhpModule phpModule, String command, String title) {
         return runCommand(phpModule, command, title, Collections.<String>emptyList());
