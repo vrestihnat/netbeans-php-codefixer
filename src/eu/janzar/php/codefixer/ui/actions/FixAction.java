@@ -47,7 +47,7 @@ import eu.janzar.php.codefixer.preferences.PhpCodefixerPreferences;
 @ActionRegistration(
         displayName = "#CTL_FixAction"
 )
-@Messages("CTL_FixAction=PHP Codefixer - fix")
+@Messages("CTL_FixAction=Codefixer - fix")
 @ActionReferences({
     @ActionReference(path = "Loaders/folder/any/Actions", position = 1690),
     @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1690),
@@ -160,10 +160,7 @@ public class FixAction extends AbstractAction implements ActionListener {
      protected List<String> getOptions() {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         List<String> options = new ArrayList<>();
-        boolean isDryRun = isDryRun();
         boolean isVerbose;
-//        boolean isDiff;
-//        boolean isDiffFormatUdiff;
         
         PhpCodefixerOptions instance = PhpCodefixerOptions.getInstance();
         options.addAll(instance.getAllOptions(phpModule));
@@ -201,12 +198,5 @@ public class FixAction extends AbstractAction implements ActionListener {
         return options;
     }
      
-    protected boolean isDryRun() {
-        String name = getName();
-        if (StringUtils.isEmpty(name)) {
-            return false;
-        }
-        return name.contains("--dry-run"); // NOI18N
-    }
-    
+
 }

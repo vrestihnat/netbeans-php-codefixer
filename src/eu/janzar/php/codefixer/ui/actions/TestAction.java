@@ -28,12 +28,12 @@ import org.openide.util.NbBundle;
 @ActionRegistration(
         displayName = "#CTL_TestAction"
 )
-@NbBundle.Messages("CTL_TestAction=PHP Codesniffer")
+@NbBundle.Messages("CTL_TestAction=Codesniffer")
 @ActionReferences({
-    @ActionReference(path = "Loaders/folder/any/Actions", position = 1690),
-    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1690),
-    @ActionReference(path = "Editors/text/x-php5/Popup", position = 590),
-    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1090)
+    @ActionReference(path = "Loaders/folder/any/Actions", position = 1692),
+    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1692),
+    @ActionReference(path = "Editors/text/x-php5/Popup", position = 592),
+    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1092)
 })
 public class TestAction extends FixAction {
         @Override

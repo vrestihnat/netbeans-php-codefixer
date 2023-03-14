@@ -31,12 +31,12 @@ import org.openide.util.NbBundle;
 @ActionRegistration(
         displayName = "#CTL_StanAction"
 )
-@NbBundle.Messages("CTL_StanAction=PHP Stan")
+@NbBundle.Messages("CTL_StanAction=Stan")
 @ActionReferences({
-    @ActionReference(path = "Loaders/folder/any/Actions", position = 1690),
-    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1690),
-    @ActionReference(path = "Editors/text/x-php5/Popup", position = 590),
-    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1090)
+    @ActionReference(path = "Loaders/folder/any/Actions", position = 1693),
+    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1693),
+    @ActionReference(path = "Editors/text/x-php5/Popup", position = 593),
+    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1093)
 })
 public class StanAction extends FixAction {
 
@@ -80,7 +80,6 @@ public class StanAction extends FixAction {
     protected List<String> getOptions() {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         List<String> options = new ArrayList<>();
-        boolean isDryRun = isDryRun();
 
         PhpCodefixerOptions instance = PhpCodefixerOptions.getInstance();
         options.addAll(instance.getAllStanOptions(phpModule));

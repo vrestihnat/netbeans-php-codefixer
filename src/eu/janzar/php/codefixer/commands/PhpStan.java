@@ -85,8 +85,8 @@ public final class PhpStan {
     }
 
     public static PhpStan getDefault() throws InvalidPhpExecutableException {
-        //String phpstanPath = PhpCodefixerOptions.getInstance().getPhpStanPath();
-        String phpstanPath = "c://_jzaruba//php8.1.16//phpstan.phar --configuration=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//phpstan.neon.dist\" --autoload-file=\"c://Users//Zaruba jan//Documents//NetBeansProjects//eshop//vendor//autoload.php\" --level=5   ";
+        String phpstanPath = PhpCodefixerOptions.getInstance().getPhpStanPath();
+//        String phpstanPath = "c://_jzaruba//php8.1.16//phpstan.phar --configuration=\"C://Users//Zaruba jan//Documents//NetBeansProjects//eshop//phpstan.neon.dist\" --autoload-file=\"c://Users//Zaruba jan//Documents//NetBeansProjects//eshop//vendor//autoload.php\" --level=5   ";
         return newInstance(phpstanPath);
     }
 
