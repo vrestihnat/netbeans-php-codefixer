@@ -182,7 +182,8 @@ public class PhpCodefixerOptions {
     public List<String> getAllOptions(PhpModule phpModule) {
         List<String> all = new ArrayList<>();
         if (!getRules().isEmpty()) {
-            all.add(String.format(PhpCodefixer.RULES_PARAM, phpModule.getProjectDirectory().getPath().replaceAll(" ","\\ ")+"/"+getRules()));
+            
+            all.add(String.format(PhpCodefixer.RULES_PARAM, phpModule.getSourceDirectory().getPath().replaceAll(" ","\\ ")+"/"+getRules()));
         }
 
         if (!getEncoding().isEmpty()) {
@@ -206,10 +207,10 @@ public class PhpCodefixerOptions {
             all.add(String.format(PhpStan.LEVEL_PARAM, getLevel()));
         }
         if (!getStanConfiguration().isEmpty()) {
-            all.add(String.format(PhpStan.CONFIG_PARAM, phpModule.getProjectDirectory().getPath().replaceAll(" ","\\ ")+"/"+getStanConfiguration()));
+            all.add(String.format(PhpStan.CONFIG_PARAM, phpModule.getSourceDirectory().getPath().replaceAll(" ","\\ ")+"/"+getStanConfiguration()));
         }
         if (!getStanAutoload().isEmpty()) {
-            all.add(String.format(PhpStan.AUTOLOAD_PARAM, phpModule.getProjectDirectory().getPath().replaceAll(" ","\\ ")+"/"+getStanAutoload()));
+            all.add(String.format(PhpStan.AUTOLOAD_PARAM, phpModule.getSourceDirectory().getPath().replaceAll(" ","\\ ")+"/"+getStanAutoload()));
         }
 
         if (!getStanCustom().isEmpty()) {
